@@ -1,0 +1,21 @@
+MYBESTLOAN V6 STATIC + TYPOGRAPHY QA REPORT
+Date: 2026-09-05
+
+RESULT: PASS
+
+Validated:
+- 22 HTML pages parsed.
+- 0 duplicate HTML IDs.
+- 0 broken local HTML/image/script/stylesheet references.
+- 0 missing same-page fragment targets.
+- FAQ hero removed.
+- Contact hero removed.
+- Contact “Ready when you are” planner container removed while Book My Consultation CTA remains.
+- Homepage Quick Application markup, CSS and JavaScript hooks removed.
+- Homepage bottom ticker “Live starting rates” companion text removed; LIVE RATES remains.
+- Broad blue-section descendant white-text selectors removed and replaced with section-intro-scoped rules.
+- Site-wide computed-style audit across known white/glass card families inside blue sections: 0 unintended white heading/body/meta text occurrences.
+- Builder-project document-card headings explicitly use the dark card palette.
+- JavaScript syntax check passed.
+- CSS contains 0 !important declarations.
+- CSS contains 0 duplicate exact selector/property declarations in the same logical context.

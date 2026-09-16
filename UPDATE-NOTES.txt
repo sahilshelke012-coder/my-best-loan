@@ -1,0 +1,10 @@
+MYBESTLOAN UPDATE — 2026-09-05 V6
+
+Client corrections applied to the v5 canonical source:
+- FAQ page hero banner removed; the Popular Questions section is now the first content section with fixed-nav clearance.
+- Contact page hero banner removed; the consultation planner is now the first content section with fixed-nav clearance.
+- Contact planner translucent “Ready when you are” submit container removed; booking submit remains as a direct centered CTA.
+- Homepage Quick Application section removed completely, including its CSS and JavaScript handler/sync logic.
+- Homepage bottom rate ticker keeps the LIVE RATES pill but removes the adjacent “Live starting rates”/helper text block and reclaims that width for lender cards.
+- Blue-section typography architecture corrected at source: white text is now scoped only to section-level intro/header copy. White/glass cards inside blue sections inherit their intended dark heading/body palette instead of being forced white by broad descendant selectors.
+- No override stylesheet and no !important declarations introduced.

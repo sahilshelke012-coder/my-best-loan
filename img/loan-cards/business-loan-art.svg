@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="320" viewBox="0 0 520 320" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="30" y1="28" x2="472" y2="284" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#305cff"/>
+      <stop offset="0.55" stop-color="#5a43ff"/>
+      <stop offset="1" stop-color="#7de2ff"/>
+    </linearGradient>
+    <radialGradient id="g1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(382 88) rotate(116.153) scale(148.625 172.501)">
+      <stop stop-color="white" stop-opacity="0.62"/>
+      <stop offset="1" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(146 206) rotate(54.63) scale(130.212 166.677)">
+      <stop stop-color="#9BE8FF" stop-opacity="0.76"/>
+      <stop offset="1" stop-color="#9BE8FF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur1" x="209" y="41" width="206" height="206" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+    <filter id="blur2" x="53" y="132" width="186" height="186" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.06"/></feComponentTransfer></filter>
+    <linearGradient id="glass" x1="140" y1="54" x2="240" y2="186" gradientUnits="userSpaceOnUse">
+      <stop stop-color="white" stop-opacity="0.58"/>
+      <stop offset="1" stop-color="white" stop-opacity="0.18"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="504" height="304" rx="34" fill="url(#bg)"/>
+  <rect x="8" y="8" width="504" height="304" rx="34" fill="url(#g1)"/>
+  <rect x="8" y="8" width="504" height="304" rx="34" fill="url(#g2)"/>
+  <g opacity="0.34">
+    <path d="M370 38c31 0 56 25 56 56s-25 56-56 56-56-25-56-56 25-56 56-56Z" fill="url(#glass)" filter="url(#blur1)"/>
+    <path d="M146 168c28 0 51 23 51 51s-23 51-51 51-51-23-51-51 23-51 51-51Z" fill="#7DE2FF" filter="url(#blur2)"/>
+  </g>
+  <g opacity="0.96">
+    <path d="M400 77c22 0 40 18 40 40 0 23-18 41-40 41-23 0-41-18-41-41 0-22 18-40 41-40Z" fill="rgba(255,255,255,0.16)"/>
+    <ellipse cx="370" cy="106" rx="84" ry="56" fill="rgba(255,255,255,0.14)"/>
+    <ellipse cx="152" cy="214" rx="76" ry="40" fill="rgba(255,255,255,0.18)"/>
+    <path d="M126 188c26-20 74-20 100 4 28 26 12 64-28 72-44 9-104-18-104-48 0-10 4-20 12-28 8-8 10-8 20 0Z" fill="rgba(255,255,255,0.24)"/>
+    <path d="M345 70c30 0 54 17 54 39s-24 39-54 39-54-17-54-39 24-39 54-39Z" fill="rgba(255,255,255,0.22)"/>
+  </g>
+  <rect x="34" y="38" width="154" height="42" rx="21" fill="white" fill-opacity="0.16" stroke="white" stroke-opacity="0.26"/>
+  <text x="58" y="64" fill="white" fill-opacity="0.92" font-size="16" font-family="Montserrat, Arial, sans-serif" font-weight="700">Business Loan</text>
+  <g transform="translate(280 94)"><path d="M52 48h56l10 16h22a10 10 0 0 1 10 10v44a10 10 0 0 1-10 10H20a10 10 0 0 1-10-10V74a10 10 0 0 1 10-10h22Zm14 0-4 16h36l-4-16Z" fill="white" fill-opacity="0.96"/></g>
+  <g filter="url(#grain)"><rect x="8" y="8" width="504" height="304" rx="34" fill="white" fill-opacity="0.25"/></g>
+  <rect x="8.75" y="8.75" width="502.5" height="302.5" rx="33.25" stroke="white" stroke-opacity="0.22" stroke-width="1.5"/>
+</svg>

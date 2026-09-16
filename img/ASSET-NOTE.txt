@@ -1,0 +1,3 @@
+This package contains the complete uploaded MyBestLoan HTML/CSS/JS codebase.
+Copy the existing project image assets into this img/ directory, preserving the current subfolder structure (for example img/hp/...).
+The source image library itself was not part of the uploaded website-code files available for this packaging pass.
