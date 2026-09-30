@@ -1542,14 +1542,21 @@ function initLoanAndContentModules() {
             <input data-application-context-input name="context" type="hidden">
             <input data-application-date-input name="appointmentDate" type="hidden">
             <input data-application-time-input name="appointmentTime" type="hidden">
-            <div class="application-appointment" data-application-appointment>
-              <div class="application-appointment-head"><button class="application-appointment-nav" data-application-prev type="button" aria-label="Previous month">‹</button><div><span>Choose a consultation slot</span><strong data-application-month>Month Year</strong></div><button class="application-appointment-nav" data-application-next type="button" aria-label="Next month">›</button></div>
-              <div class="application-appointment-weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
-              <div class="application-appointment-days" data-application-days aria-label="Available appointment dates"></div>
-              <div class="application-appointment-times" data-application-times aria-live="polite"></div>
-              <p class="application-appointment-selection" data-application-selection>Select an available day, then choose a time.</p>
+            <div class="application-appointment appointment-calendar-card" data-application-appointment>
+              <div class="contact-step-heading"><span>01</span><div><p>CHOOSE AN APPOINTMENT</p><h3>Choose Your Preferred Time</h3><p style="margin:4px 0 0; text-transform:none; letter-spacing:normal; font-size:.85rem; color:#587087; font-weight:500;">Aapki convenience ki date aur time choose karein!</p></div></div>
+              <div class="appointment-calendar-head">
+                <button class="appointment-month-control" data-application-prev type="button" aria-label="Previous month"><svg aria-hidden="true" class="icon" viewBox="0 0 24 24"><path d="M15.5 4.5 8 12l7.5 7.5-1.8 1.8L4.4 12l9.3-9.3z" fill="currentColor"></path></svg></button>
+                <div><span>Availability</span><h3 data-application-month>Month Year</h3></div>
+                <button class="appointment-month-control" data-application-next type="button" aria-label="Next month"><svg aria-hidden="true" class="icon" viewBox="0 0 24 24"><path d="m8.5 4.5 7.5 7.5-7.5 7.5 1.8 1.8 9.3-9.3-9.3-9.3z" fill="currentColor"></path></svg></button>
+              </div>
+              <div class="appointment-weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+              <div class="appointment-days" data-application-days aria-label="Appointment dates" role="grid"></div>
+              <div class="appointment-calendar-key"><span><i class="is-available"></i>Available</span><span><i class="is-selected"></i>Selected</span><span><i class="is-unavailable"></i>Unavailable</span></div>
+              <p style="margin:14px 0 0; font-size:.82rem; color:#587087;">Don’t worry, we won’t call you unless you share your preferred time to connect.</p>
+              <div class="contact-times-block"><div><p class="eyebrow">Available times</p><p data-application-selection>Choose an available date to see appointment times.</p></div><div class="appointment-times" data-application-times aria-live="polite"></div></div>
+              <div class="appointment-summary" data-application-summary><span>No appointment selected yet.</span></div>
             </div>
-            <button class="button offer-submit" disabled type="submit">Apply &amp; Book Consultation</button>
+            <button class="button offer-submit" disabled type="submit">Book My Call</button>
             <p class="offer-form-note" data-application-note>Submitting this form creates an enquiry request. Approval, rate and terms remain subject to lender assessment.</p>
             <div class="form-status" data-application-status role="status" tabindex="-1"></div>
           </form>
@@ -1577,6 +1584,9 @@ function initLoanAndContentModules() {
     const applicationDays = modal.querySelector('[data-application-days]');
     const applicationTimes = modal.querySelector('[data-application-times]');
     const applicationSelection = modal.querySelector('[data-application-selection]');
+    const applicationSummary = modal.querySelector('[data-application-summary]');
+    const applicationPrev = modal.querySelector('[data-application-prev]');
+    const applicationNext = modal.querySelector('[data-application-next]');
     const applicationDateInput = modal.querySelector('[data-application-date-input]');
     const applicationTimeInput = modal.querySelector('[data-application-time-input]');
     const applicationSubmit = modal.querySelector('.offer-submit');
@@ -1600,7 +1610,7 @@ function initLoanAndContentModules() {
       const get=(type)=>Number(parts.find((part)=>part.type===type)?.value||0);
       return {year:get('year'),month:get('month'),day:get('day'),hour:get('hour'),minute:get('minute')};
     };
-    const appHumanDate = (date) => new Intl.DateTimeFormat('en-IN',{weekday:'short',day:'numeric',month:'short'}).format(date);
+    const appHumanDate = (date) => new Intl.DateTimeFormat('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' }).format(date);
     const appHumanTime = (value) => { const [h,m]=value.split(':').map(Number); return new Intl.DateTimeFormat('en-IN',{hour:'numeric',minute:'2-digit',hour12:true}).format(new Date(2000,0,1,h,m)); };
     const appBookings = () => { try { return new Set(JSON.parse(localStorage.getItem(previewStorageKey) || '[]')); } catch (error) { return new Set(); } };
     const saveAppBooking = (value) => { const booked=appBookings(); booked.add(value); try { localStorage.setItem(previewStorageKey,JSON.stringify([...booked])); } catch (error) {} };
@@ -1615,29 +1625,114 @@ function initLoanAndContentModules() {
       return slots;
     };
     const updateApplicationSubmit = () => {
+      const ready = Boolean(applicationSelectedDate && applicationSelectedTime);
       if(applicationDateInput) applicationDateInput.value=applicationSelectedDate;
       if(applicationTimeInput) applicationTimeInput.value=applicationSelectedTime;
-      if(applicationSubmit) applicationSubmit.disabled=!(applicationSelectedDate && applicationSelectedTime);
+      if(applicationSubmit) applicationSubmit.disabled=!ready;
+      if(!applicationSummary) return;
+      if(!ready) applicationSummary.innerHTML = '<span>No appointment selected yet.</span>';
+      else {
+        const [year, month, day] = applicationSelectedDate.split('-').map(Number);
+        const date = new Date(year, month - 1, day);
+        applicationSummary.innerHTML = `<span>Your appointment</span><strong>${appHumanDate(date)} · ${appHumanTime(applicationSelectedTime)}</strong><small>${applicationTimeZone.replace('_',' ')}</small>`;
+      }
     };
     const renderApplicationTimes = (date) => {
       if(!applicationTimes) return; applicationTimes.innerHTML=''; const slots=appSlots(date);
-      if(!slots.length){ if(applicationSelection) applicationSelection.textContent=`${appHumanDate(date)} has no available times. Choose another day.`; return; }
-      if(applicationSelection) applicationSelection.textContent=`${appHumanDate(date)} — choose a time.`;
-      slots.forEach((slot)=>{ const button=document.createElement('button'); button.type='button'; button.className='application-appointment-time'; button.textContent=appHumanTime(slot); button.classList.toggle('is-selected',slot===applicationSelectedTime); button.addEventListener('click',()=>{applicationSelectedTime=slot; applicationTimes.querySelectorAll('.application-appointment-time').forEach((item)=>item.classList.toggle('is-selected',item===button)); if(applicationSelection) applicationSelection.textContent=`Selected: ${appHumanDate(date)} at ${appHumanTime(slot)}.`; updateApplicationSubmit();}); applicationTimes.appendChild(button); });
+      if(applicationSelection) applicationSelection.textContent = slots.length ? `${appHumanDate(date)} — choose an available time.` : `${appHumanDate(date)} has no available time slots.`;
+      if(!slots.length){
+        const empty = document.createElement('p');
+        empty.className = 'appointment-times-empty';
+        empty.textContent = 'No appointment times are available on this date. Choose another available day.';
+        applicationTimes.appendChild(empty);
+        return;
+      }
+      slots.forEach((slot)=>{
+        const button=document.createElement('button');
+        button.type='button';
+        button.className='appointment-time';
+        button.textContent=appHumanTime(slot);
+        button.dataset.appointmentTime = slot;
+        button.classList.toggle('is-selected',slot===applicationSelectedTime);
+        button.setAttribute('aria-pressed', String(slot === applicationSelectedTime));
+        button.addEventListener('click',()=>{
+          applicationSelectedTime=slot;
+          applicationTimes.querySelectorAll('.appointment-time').forEach((item)=>{
+            const active = item.dataset.appointmentTime === slot;
+            item.classList.toggle('is-selected', active);
+            item.setAttribute('aria-pressed', String(active));
+          });
+          updateApplicationSubmit();
+        });
+        applicationTimes.appendChild(button);
+      });
+    };
+    const selectApplicationDate = (date) => {
+      applicationSelectedDate = appKey(date);
+      applicationSelectedTime = '';
+      renderApplicationCalendar();
+      renderApplicationTimes(date);
+      updateApplicationSubmit();
     };
     const renderApplicationCalendar = () => {
       if(!applicationDays || !applicationMonth || !applicationViewMonth) return;
-      applicationMonth.textContent=new Intl.DateTimeFormat('en-IN',{month:'long',year:'numeric'}).format(applicationViewMonth); applicationDays.innerHTML='';
+      applicationMonth.textContent=new Intl.DateTimeFormat('en-IN',{month:'long',year:'numeric'}).format(applicationViewMonth);
+      applicationDays.innerHTML='';
       const y=applicationViewMonth.getFullYear(),m=applicationViewMonth.getMonth(),first=new Date(y,m,1).getDay(),total=new Date(y,m+1,0).getDate();
-      for(let i=0;i<first;i+=1){const spacer=document.createElement('span');spacer.setAttribute('aria-hidden','true');applicationDays.appendChild(spacer);}
-      for(let day=1;day<=total;day+=1){const date=new Date(y,m,day),key=appKey(date),slots=appSlots(date);const button=document.createElement('button');button.type='button';button.className='application-appointment-day';button.textContent=String(day);button.disabled=!slots.length;button.classList.toggle('is-available',slots.length>0);button.classList.toggle('is-selected',key===applicationSelectedDate);button.setAttribute('aria-label',`${appHumanDate(date)}${slots.length?`, ${slots.length} times available`:', unavailable'}`);if(slots.length)button.addEventListener('click',()=>{applicationSelectedDate=key;applicationSelectedTime='';renderApplicationCalendar();renderApplicationTimes(date);updateApplicationSubmit();});applicationDays.appendChild(button);}
-      const prev=modal.querySelector('[data-application-prev]'); if(prev&&applicationCurrentMonth) prev.disabled=applicationViewMonth<=applicationCurrentMonth;
+      for(let i=0;i<first;i+=1){
+        const spacer=document.createElement('span');
+        spacer.className = 'appointment-day-spacer';
+        spacer.setAttribute('aria-hidden','true');
+        applicationDays.appendChild(spacer);
+      }
+      const currentClock = appNowParts();
+      const todayKey = `${currentClock.year}-${appPad(currentClock.month)}-${appPad(currentClock.day)}`;
+      for(let day=1;day<=total;day+=1){
+        const date=new Date(y,m,day),key=appKey(date),slots=appSlots(date);
+        const available = slots.length > 0;
+        const button=document.createElement('button');
+        button.type='button';
+        button.className='appointment-day';
+        button.textContent=String(day);
+        button.disabled=!available;
+        button.classList.toggle('is-available', available);
+        button.classList.toggle('is-selected',key===applicationSelectedDate);
+        button.classList.toggle('is-today', key === todayKey);
+        button.setAttribute('aria-label',`${appHumanDate(date)}${available ? `, ${slots.length} appointment time${slots.length === 1 ? '' : 's'} available` : ', unavailable'}`);
+        button.setAttribute('aria-pressed', String(key === applicationSelectedDate));
+        if(available) button.addEventListener('click',()=>selectApplicationDate(date));
+        applicationDays.appendChild(button);
+      }
+      if(applicationPrev&&applicationCurrentMonth) {
+        const atFirstMonth = applicationViewMonth.getFullYear() === applicationCurrentMonth.getFullYear() && applicationViewMonth.getMonth() === applicationCurrentMonth.getMonth();
+        applicationPrev.disabled = atFirstMonth;
+      }
+    };
+    const changeApplicationMonth = (direction) => {
+      if(!applicationViewMonth || !applicationCurrentMonth) return;
+      const candidate = new Date(applicationViewMonth.getFullYear(), applicationViewMonth.getMonth() + direction, 1);
+      if(candidate < applicationCurrentMonth) return;
+      applicationViewMonth = candidate;
+      applicationSelectedDate = '';
+      applicationSelectedTime = '';
+      if(applicationSelection) applicationSelection.textContent = 'Choose an available date to see appointment times.';
+      if(applicationTimes) applicationTimes.innerHTML = '';
+      updateApplicationSubmit();
+      renderApplicationCalendar();
     };
     const resetApplicationPicker = () => {
-      const now=appNowParts(); applicationCurrentMonth=new Date(now.year,now.month-1,1); applicationViewMonth=new Date(applicationCurrentMonth); applicationSelectedDate='';applicationSelectedTime=''; if(applicationTimes)applicationTimes.innerHTML=''; if(applicationSelection)applicationSelection.textContent='Select an available day, then choose a time.'; renderApplicationCalendar(); updateApplicationSubmit();
+      const now=appNowParts();
+      applicationCurrentMonth=new Date(now.year,now.month-1,1);
+      applicationViewMonth=new Date(applicationCurrentMonth);
+      applicationSelectedDate='';
+      applicationSelectedTime='';
+      if(applicationTimes) applicationTimes.innerHTML='';
+      if(applicationSelection) applicationSelection.textContent='Choose an available date to see appointment times.';
+      renderApplicationCalendar();
+      updateApplicationSubmit();
     };
-    modal.querySelector('[data-application-prev]')?.addEventListener('click',()=>{if(!applicationViewMonth||!applicationCurrentMonth)return;const candidate=new Date(applicationViewMonth.getFullYear(),applicationViewMonth.getMonth()-1,1);if(candidate<applicationCurrentMonth)return;applicationViewMonth=candidate;applicationSelectedDate='';applicationSelectedTime='';renderApplicationCalendar();if(applicationTimes)applicationTimes.innerHTML='';updateApplicationSubmit();});
-    modal.querySelector('[data-application-next]')?.addEventListener('click',()=>{if(!applicationViewMonth)return;applicationViewMonth=new Date(applicationViewMonth.getFullYear(),applicationViewMonth.getMonth()+1,1);applicationSelectedDate='';applicationSelectedTime='';renderApplicationCalendar();if(applicationTimes)applicationTimes.innerHTML='';updateApplicationSubmit();});
+    applicationPrev?.addEventListener('click', () => changeApplicationMonth(-1));
+    applicationNext?.addEventListener('click', () => changeApplicationMonth(1));
 
     const focusables = () => [...modal.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')].filter((el) => !el.hidden);
     const close = () => {
@@ -1677,7 +1772,7 @@ function initLoanAndContentModules() {
         if (kicker) kicker.textContent = `${loanType} consultation`;
         if (heading) heading.textContent = `Start your ${loanType} application`;
         if (rateLabel) rateLabel.textContent = 'Next step';
-        if (rate) rate.textContent = 'Choose a consultation';
+        if (rate) rate.textContent = 'Book My Call';
         if (benefits[0]) benefits[0].textContent = `Discuss your ${loanType.toLowerCase()} requirement with a loan expert`;
         if (benefits[1]) benefits[1].textContent = 'Review indicative lender options, eligibility factors and documents';
         if (benefits[2]) benefits[2].textContent = 'Choose an available date and time without leaving this page';

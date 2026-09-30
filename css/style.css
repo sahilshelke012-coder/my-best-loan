@@ -1656,9 +1656,9 @@ strong {
 .contact-planner-heading>p:last-child { color:rgba(244,249,255,.86); }
 .contact-planner-heading .eyebrow { color:#cce2ff; }
 .contact-planner-form { display:grid; gap:18px; }
-.contact-planner-shell { display:grid; grid-template-columns:minmax(390px,.96fr) minmax(0,1.04fr); gap:22px; align-items:start; }
+.contact-planner-shell { display:grid; grid-template-columns:minmax(390px,.96fr) minmax(0,1.04fr); gap:22px; align-items:stretch; }
 .contact-intake-panel,.contact-scheduler-panel {
-  min-width:0; padding:28px; border:1px solid rgba(255,255,255,.74); border-radius:30px;
+  min-width:0; height:100%; display:flex; flex-direction:column; padding:28px; border:1px solid rgba(255,255,255,.74); border-radius:30px;
   background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(242,247,255,.96));
   box-shadow:0 28px 70px rgba(4,25,78,.25),inset 0 1px 0 rgba(255,255,255,.96);
 }
@@ -1732,23 +1732,14 @@ strong {
 .site-quick-actions.is-manually-expanded .site-quick-actions-icon { opacity:0; pointer-events:none; }
 
 /* Appointment picker inside contextual Apply modal */
-.application-appointment { grid-column:1/-1; margin-top:2px; padding:18px; border:1px solid rgba(65,101,160,.12); border-radius:19px; background:linear-gradient(180deg,#f7faff,#edf4ff); }
-.application-appointment-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
-.application-appointment-head>div { text-align:center; }
-.application-appointment-head span { display:block; color:#70849d; font-size:.66rem; }
-.application-appointment-head strong { display:block; margin-top:2px; color:#17365f; font:700 1rem/1.2 "Montserrat",sans-serif; }
-.application-appointment-nav { width:38px; height:38px; display:grid; place-items:center; border:1px solid rgba(72,111,175,.14); border-radius:12px; background:#fff; color:#235fc6; cursor:pointer; }
-.application-appointment-nav:disabled { opacity:.35; cursor:default; }
-.application-appointment-weekdays,.application-appointment-days { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:5px; }
-.application-appointment-weekdays { margin-bottom:5px; }
-.application-appointment-weekdays span { text-align:center; color:#8494a8; font:700 .56rem/1 "Montserrat",sans-serif; text-transform:uppercase; }
-.application-appointment-day { position:relative; aspect-ratio:1; min-width:0; border:1px solid rgba(73,111,174,.10); border-radius:10px; background:#f4f7fc; color:#8090a4; font:700 .67rem/1 "Montserrat",sans-serif; }
-.application-appointment-day.is-available { background:#fff; color:#173d72; cursor:pointer; }
-.application-appointment-day.is-selected { border-color:#165dff; background:linear-gradient(145deg,#165dff,#704cff); color:#fff; box-shadow:0 8px 18px rgba(41,86,205,.18); }
-.application-appointment-times { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; margin-top:13px; }
-.application-appointment-time { min-height:38px; padding:8px 6px; border:1px solid rgba(67,106,169,.14); border-radius:10px; background:#fff; color:#204d86; font:700 .66rem/1 "Montserrat",sans-serif; cursor:pointer; }
-.application-appointment-time.is-selected { background:linear-gradient(135deg,#165dff,#704cff); color:#fff; border-color:transparent; }
-.application-appointment-selection { grid-column:1/-1; margin:10px 0 0; color:#6f8299; font-size:.7rem; }
+.application-appointment { grid-column:1/-1; margin-top:2px; padding:22px; border:1px solid rgba(65,101,160,.12); border-radius:24px; background:linear-gradient(180deg,#f7faff,#edf4ff); }
+.application-appointment .appointment-calendar-head { margin-bottom:18px; }
+.application-appointment .appointment-times { margin:14px 0 16px; min-height:56px; }
+.application-appointment .contact-times-block { margin-top:18px; padding-top:16px; border-top:1px solid rgba(72,111,175,.10); }
+.application-appointment .contact-times-block>div:first-child { display:flex; align-items:baseline; justify-content:space-between; gap:16px; }
+.application-appointment .contact-times-block .eyebrow { margin:0; }
+.application-appointment .contact-times-block [data-application-selection] { margin:0; color:#71849b; font-size:.74rem; text-align:right; }
+.application-appointment .appointment-summary { margin-top:14px; }
 
 @media (max-width:1024px) {
   .contact-planner-shell { grid-template-columns:1fr; }
@@ -1767,7 +1758,6 @@ strong {
   .site-quick-actions.is-mobile-pending { opacity:0; visibility:hidden; pointer-events:none; transform:translateY(18px) scale(.96); }
   .site-quick-actions.is-collapsed { right:12px; width:58px; height:58px; min-height:58px; }
   .site-quick-actions.is-manually-expanded { width:min(320px,calc(100vw - 24px)); }
-  .application-appointment-times { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
 
 @media (prefers-reduced-motion:reduce) {
